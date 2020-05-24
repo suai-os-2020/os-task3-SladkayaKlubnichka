@@ -17,6 +17,7 @@ volatile int n;
 
 HANDLE sem_b, sem_c, sem_d, sem_f;
 HANDLE sem_g, sem_e, sem_k, sem_i;
+HANDLE sem_n, sem_m;
 
 unsigned int lab3_thread_graph_id() 
 {
@@ -95,12 +96,16 @@ DWORD WINAPI thread_d(LPVOID iNum) {
 	}
 
 	Sleep(500);
+
 	for (int i = 0; i < 3; i++) {
+		WaitForSingleObject(sem_d, INFINITE);
 		WaitForSingleObject(hMutex, INFINITE);
 		cout << "d" << flush;
 		ReleaseMutex(hMutex);
+		ReleaseSemaphore(sem_n, 1, NULL);
 		computation();
 	}
+
 	ExitThread(0);
 }
 
@@ -125,7 +130,6 @@ DWORD WINAPI thread_f(LPVOID iNum) {
 		computation();
 		ReleaseSemaphore(sem_d, 1, NULL);
 	}
-
 
 	ExitThread(0);
 }
@@ -172,10 +176,13 @@ DWORD WINAPI thread_k(LPVOID iNum) {
 	}
 
 	Sleep(500);
+	ReleaseSemaphore(sem_k, 1, NULL);
 	for (int i = 0; i < 3; i++) {
+		WaitForSingleObject(sem_k, INFINITE);
 		WaitForSingleObject(hMutex, INFINITE);
 		cout << "k" << flush;
 		ReleaseMutex(hMutex);
+		ReleaseSemaphore(sem_m, 1, NULL);
 		computation();
 	}
 
@@ -224,11 +231,14 @@ DWORD WINAPI thread_m(LPVOID iNum) {
 		ReleaseMutex(hMutex);
 		computation();
 	}
+
 	Sleep(500);
 	for (int i = 0; i < 3; i++) {
+		WaitForSingleObject(sem_m, INFINITE);
 		WaitForSingleObject(hMutex, INFINITE);
 		cout << "m" << flush;
 		ReleaseMutex(hMutex);
+		ReleaseSemaphore(sem_d, 1, NULL);
 		computation();
 	}
 	ExitThread(0);
@@ -237,9 +247,11 @@ DWORD WINAPI thread_m(LPVOID iNum) {
 DWORD WINAPI thread_n(LPVOID iNum) {
 	Sleep(500);
 	for (int i = 0; i < 3; i++) {
+		WaitForSingleObject(sem_n, INFINITE);
 		WaitForSingleObject(hMutex, INFINITE);
 		cout << "n" << flush;
 		ReleaseMutex(hMutex);
+		ReleaseSemaphore(sem_k, 1, NULL);
 		computation();
 	}
 	ExitThread(0);
@@ -301,8 +313,16 @@ int lab3_init()
 		printf("CreateSemaphore error: %d\n", GetLastError());
 		return 1;
 	}
-
-
+	sem_n = CreateSemaphore(NULL, 0, 1, NULL);
+	if (sem_n == NULL) {
+		printf("CreateSemaphore error: %d\n", GetLastError());
+		return 1;
+	}
+	sem_m = CreateSemaphore(NULL, 0, 1, NULL);
+	if (sem_m == NULL) {
+		printf("CreateSemaphore error: %d\n", GetLastError());
+		return 1;
+	}
 	// start the threads - interval 1
 	hThreads[0] = CreateThread(NULL, 0, thread_a, NULL, 0, &IDThread);
 	if (hThreads[0] == NULL)
@@ -389,6 +409,7 @@ int lab3_init()
 	CloseHandle(sem_e);
 	CloseHandle(sem_k);
 	CloseHandle(sem_i);
-
+	CloseHandle(sem_m);
+	CloseHandle(sem_n);
     return 0;
 }
