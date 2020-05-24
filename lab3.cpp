@@ -88,7 +88,7 @@ DWORD WINAPI thread_d(LPVOID iNum) {
 	}
 
 	for (int i = 0; i < 3; i++) {
-		Sleep(500);
+		Sleep(1000);
 		WaitForSingleObject(hMutex, INFINITE);
 		cout << "d" << flush;
 		ReleaseMutex(hMutex);
@@ -117,6 +117,7 @@ DWORD WINAPI thread_f(LPVOID iNum) {
 		computation();
 		ReleaseSemaphore(sem_b, 1, NULL);
 	}
+
 	WaitForSingleObject(sem_b, INFINITE);
 	ReleaseSemaphore(sem_f, 1, NULL);
 
@@ -167,14 +168,13 @@ DWORD WINAPI thread_k(LPVOID iNum) {
 	}
 
 	for (int i = 0; i < 3; i++) {
-		Sleep(500);
+		Sleep(1000);
 		WaitForSingleObject(hMutex, INFINITE);
 		cout << "k" << flush;
 		ReleaseMutex(hMutex);
 		computation();
 	}
-
-	Sleep(500);
+    Sleep(1000);
 	ReleaseSemaphore(sem_k, 1, NULL);
 	for (int i = 0; i < 3; i++) {
 		WaitForSingleObject(sem_k, INFINITE);
@@ -200,7 +200,7 @@ DWORD WINAPI thread_i(LPVOID iNum) {
 
 
 	for (int i = 0; i < 3; i++) {
-		Sleep(500);
+		Sleep(1000);
 		WaitForSingleObject(hMutex, INFINITE);
 		cout << "i" << flush;
 		ReleaseMutex(hMutex);
@@ -212,7 +212,7 @@ DWORD WINAPI thread_i(LPVOID iNum) {
 
 DWORD WINAPI thread_h(LPVOID iNum) {
 	for (int i = 0; i < 3; i++) {
-		Sleep(500);
+		Sleep(1000);
 		WaitForSingleObject(hMutex, INFINITE);
 		cout << "h" << flush;
 		ReleaseMutex(hMutex);
@@ -224,7 +224,7 @@ DWORD WINAPI thread_h(LPVOID iNum) {
 DWORD WINAPI thread_m(LPVOID iNum) {
 
 	for (int i = 0; i < 3; i++) {
-		Sleep(500);
+		Sleep(1000);
 		WaitForSingleObject(hMutex, INFINITE);
 		cout << "m" << flush;
 		ReleaseMutex(hMutex);
@@ -368,6 +368,8 @@ int lab3_init()
 	WaitForSingleObject(hThreads[6], INFINITE);
 	WaitForSingleObject(hThreads[4], INFINITE);
 
+	// interval 4
+
 	hThreads[9] = CreateThread(NULL, 0, thread_h, NULL, 0, &IDThread);
 	if (hThreads[9] == NULL)
 		return GetLastError();
@@ -378,7 +380,7 @@ int lab3_init()
 
 	WaitForSingleObject(hThreads[8], INFINITE);
 	WaitForSingleObject(hThreads[9], INFINITE);
-
+	// interval 5
 	hThreads[11] = CreateThread(NULL, 0, thread_n, NULL, 0, &IDThread);
 	if (hThreads[11] == NULL)
 		return GetLastError();
@@ -388,6 +390,7 @@ int lab3_init()
 	WaitForSingleObject(hThreads[11], INFINITE);
 	WaitForSingleObject(hThreads[3], INFINITE);
 
+	// final interval
 	hThreads[12] = CreateThread(NULL, 0, thread_p, NULL, 0, &IDThread);
 	if (hThreads[12] == NULL)
 		return GetLastError();
