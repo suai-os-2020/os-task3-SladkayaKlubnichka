@@ -1,5 +1,5 @@
 #include "lab3.h"
-#include <Windows.h>
+#include <windows.h>
 #include <stdio.h>
 //
 // lab3 code should be located here!
@@ -364,52 +364,52 @@ int lab3_init()
 		return 1;
 	}
 	// start the threads - interval 1
-	hThreads[0] = CreateThread(NULL, 0, thread_a, NULL, 0, &IDThread);
+	hThreads[0] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)thread_a, NULL, 0, &IDThread);
 	if (hThreads[0] == NULL)
 		return GetLastError();
 	WaitForSingleObject(hThreads[0], INFINITE);
 	// interval 2
-	hThreads[1] = CreateThread(NULL, 0, thread_b, NULL, 0, &IDThread);
+	hThreads[1] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)thread_b, NULL, 0, &IDThread);
 	if (hThreads[1] == NULL)
 		return GetLastError();
-	hThreads[2] = CreateThread(NULL, 0, thread_c, NULL, 0, &IDThread);
+	hThreads[2] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)thread_c, NULL, 0, &IDThread);
 	if (hThreads[2] == NULL)
 		return GetLastError();
-	hThreads[3] = CreateThread(NULL, 0, thread_d, NULL, 0, &IDThread);
+	hThreads[3] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)thread_d, NULL, 0, &IDThread);
 	if (hThreads[3] == NULL)
 		return GetLastError();
-	hThreads[4] = CreateThread(NULL, 0, thread_f, NULL, 0, &IDThread);
+	hThreads[4] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)thread_f, NULL, 0, &IDThread);
 	if (hThreads[4] == NULL)
 		return GetLastError();
 	WaitForSingleObject(hThreads[1], INFINITE);
 	WaitForSingleObject(hThreads[2], INFINITE);
 	// interval 3
-	hThreads[5] = CreateThread(NULL, 0, thread_g, NULL, 0, &IDThread);
+	hThreads[5] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)thread_g, NULL, 0, &IDThread);
 	if (hThreads[5] == NULL)
 		return GetLastError();
-	hThreads[6] = CreateThread(NULL, 0, thread_e, NULL, 0, &IDThread);
+	hThreads[6] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)thread_e, NULL, 0, &IDThread);
 	if (hThreads[6] == NULL)
 		return GetLastError();
-	hThreads[7] = CreateThread(NULL, 0, thread_k, NULL, 0, &IDThread);
+	hThreads[7] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)thread_k, NULL, 0, &IDThread);
 	if (hThreads[7] == NULL)
 		return GetLastError();
-	hThreads[8] = CreateThread(NULL, 0, thread_i, NULL, 0, &IDThread);
+	hThreads[8] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)thread_i, NULL, 0, &IDThread);
 	if (hThreads[8] == NULL)
 		return GetLastError();
 	WaitForSingleObject(hThreads[5], INFINITE);
 	WaitForSingleObject(hThreads[4], INFINITE);
 	WaitForSingleObject(hThreads[6], INFINITE);
 	// interval 4 (d[3], k[7], i[8], h[9], m[10])
-	hThreads[9] = CreateThread(NULL, 0, thread_h, NULL, 0, &IDThread);
+	hThreads[9] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)thread_h, NULL, 0, &IDThread);
 	if (hThreads[9] == NULL)
 		return GetLastError();
-	hThreads[10] = CreateThread(NULL, 0, thread_m, NULL, 0, &IDThread);
+	hThreads[10] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)thread_m, NULL, 0, &IDThread);
 	if (hThreads[10] == NULL)
 		return GetLastError();
 	WaitForSingleObject(hThreads[9], INFINITE);
 	WaitForSingleObject(hThreads[8], INFINITE);
 	// interval 5
-	hThreads[11] = CreateThread(NULL, 0, thread_n, NULL, 0, &IDThread);
+	hThreads[11] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)thread_n, NULL, 0, &IDThread);
 	if (hThreads[11] == NULL)
 		return GetLastError();
 	WaitForSingleObject(hThreads[7], INFINITE);
@@ -417,7 +417,7 @@ int lab3_init()
 	WaitForSingleObject(hThreads[11], INFINITE);
 	WaitForSingleObject(hThreads[3], INFINITE);
 	// final interval
-	hThreads[12] = CreateThread(NULL, 0, thread_p, NULL, 0, &IDThread);
+	hThreads[12] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)thread_p, NULL, 0, &IDThread);
 	if (hThreads[12] == NULL)
 		return GetLastError();
 	WaitForSingleObject(hThreads[12], INFINITE);
