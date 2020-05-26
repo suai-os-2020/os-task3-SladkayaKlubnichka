@@ -95,14 +95,6 @@ DWORD WINAPI thread_d(LPVOID iNum)
 		computation();
 		ReleaseSemaphore(sem_g, 1, NULL);
 	}
-	//interval 4
-	WaitForSingleObject(sem_d, INFINITE);
-	for (int i = 0; i < 3; i++) {
-		WaitForSingleObject(hMutex, INFINITE);
-		std::cout << 'd' << std::flush;
-		ReleaseMutex(hMutex);
-		computation();
-	}
 	return 0;
 }
 
@@ -158,13 +150,9 @@ DWORD WINAPI thread_e(LPVOID iNum)
 		computation();
 		ReleaseSemaphore(sem_f, 1, NULL);
 	}
-	ReleaseSemaphore(sem_d, 1, NULL);
-	ReleaseSemaphore(sem_k, 1, NULL);
-	ReleaseSemaphore(sem_i, 1, NULL);
-	ReleaseSemaphore(sem_h, 1, NULL);
-	ReleaseSemaphore(sem_m, 1, NULL);
 	return 0;
 }
+
 DWORD WINAPI thread_k(LPVOID iNum) 
 {
 	UNREFERENCED_PARAMETER(iNum);
@@ -177,17 +165,10 @@ DWORD WINAPI thread_k(LPVOID iNum)
 		computation();
 		ReleaseSemaphore(sem_e, 1, NULL);
 	}
-	//interval 4
-	WaitForSingleObject(sem_k, INFINITE);
-	for (int i = 0; i < 3; i++) 
-	{
-		WaitForSingleObject(hMutex, INFINITE);
-		std::cout << 'k' << std::flush;
-		ReleaseMutex(hMutex);
-		computation();
-	}
+
 	return 0;
 }
+
 DWORD WINAPI thread_i(LPVOID iNum) 
 {
 	UNREFERENCED_PARAMETER(iNum);
@@ -200,22 +181,12 @@ DWORD WINAPI thread_i(LPVOID iNum)
 		computation();
 		ReleaseSemaphore(sem_k, 1, NULL);
 	}
-	//interval 4
-	WaitForSingleObject(sem_i, INFINITE);
-	for (int i = 0; i < 3; i++) 
-	{
-		WaitForSingleObject(hMutex, INFINITE);
-		std::cout << 'i' << std::flush;
-		ReleaseMutex(hMutex);
-		computation();
-	}
 	return 0;
 }
 DWORD WINAPI thread_h(LPVOID iNum) 
 {
 	UNREFERENCED_PARAMETER(iNum);
 	//interval 4
-	WaitForSingleObject(sem_h, INFINITE);
 	for (int i = 0; i < 3; i++) 
 	{
 		WaitForSingleObject(hMutex, INFINITE);
@@ -228,8 +199,6 @@ DWORD WINAPI thread_h(LPVOID iNum)
 DWORD WINAPI thread_m(LPVOID iNum) 
 {
 	UNREFERENCED_PARAMETER(iNum);
-	//interval 4
-	WaitForSingleObject(sem_m, INFINITE);
 	for (int i = 0; i < 3; i++) 
 	{
 		WaitForSingleObject(hMutex, INFINITE);
@@ -300,6 +269,44 @@ DWORD WINAPI thread_m2(LPVOID iNum)
 	return 0;
 }
 
+DWORD WINAPI thread_d1(LPVOID iNum)
+{
+	UNREFERENCED_PARAMETER(iNum);
+	for (int i = 0; i < 3; i++)
+	{
+		WaitForSingleObject(hMutex, INFINITE);
+		std::cout << 'd' << std::flush;
+		ReleaseMutex(hMutex);
+		computation();
+	}
+	return 0;
+}
+DWORD WINAPI thread_k1(LPVOID iNum)
+{
+	UNREFERENCED_PARAMETER(iNum);
+	for (int i = 0; i < 3; i++)
+	{
+		WaitForSingleObject(hMutex, INFINITE);
+		std::cout << 'k' << std::flush;
+		ReleaseMutex(hMutex);
+		computation();
+	}
+	return 0;
+}
+
+DWORD WINAPI thread_i1(LPVOID iNum)
+{
+	UNREFERENCED_PARAMETER(iNum);
+	for (int i = 0; i < 3; i++)
+	{
+		WaitForSingleObject(hMutex, INFINITE);
+		std::cout << 'i' << std::flush;
+		ReleaseMutex(hMutex);
+		computation();
+	}
+	return 0;
+}
+
 DWORD WINAPI thread_p(LPVOID iNum) 
 {
 	UNREFERENCED_PARAMETER(iNum);
@@ -312,6 +319,7 @@ DWORD WINAPI thread_p(LPVOID iNum)
 	}
 	return 0;
 }
+
 int lab3_init()
 {
 	DWORD IDThread;
@@ -418,11 +426,25 @@ int lab3_init()
 	hThreads[8] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)thread_i, NULL, 0, &IDThread);
 	if (hThreads[8] == NULL)
 		return GetLastError();
+
 	WaitForSingleObject(hThreads[5], INFINITE);
 	WaitForSingleObject(hThreads[4], INFINITE);
 	WaitForSingleObject(hThreads[6], INFINITE);
+	WaitForSingleObject(hThreads[3], INFINITE);
+	WaitForSingleObject(hThreads[7], INFINITE);
+	WaitForSingleObject(hThreads[8], INFINITE);
+	WaitForSingleObject(hThreads[6], INFINITE);
 
-	// interval 4 (d[3], k[7], i[8], h[9], m[10])
+	// interval 4
+	hThreads[3] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)thread_d1, NULL, 0, &IDThread);
+	if (hThreads[3] == NULL)
+		return GetLastError();
+	hThreads[7] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)thread_k1, NULL, 0, &IDThread);
+	if (hThreads[7] == NULL)
+		return GetLastError();
+	hThreads[8] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)thread_i1, NULL, 0, &IDThread);
+	if (hThreads[8] == NULL)
+		return GetLastError();
 	hThreads[9] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)thread_h, NULL, 0, &IDThread);
 	if (hThreads[9] == NULL)
 		return GetLastError();
