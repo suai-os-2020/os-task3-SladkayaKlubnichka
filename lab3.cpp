@@ -103,23 +103,9 @@ DWORD WINAPI thread_d(LPVOID iNum)
 		ReleaseMutex(hMutex);
 		computation();
 	}
-
-	ReleaseSemaphore(sem_k, 1, NULL);
-	ReleaseSemaphore(sem_m, 1, NULL);
-	WaitForSingleObject(sem_d, INFINITE);
-	WaitForSingleObject(sem_d, INFINITE);
-	WaitForSingleObject(sem_d, INFINITE);
-	WaitForSingleObject(sem_d, INFINITE);
-	for (int i = 0; i < 3; i++) {
-		WaitForSingleObject(sem_d, INFINITE);
-		WaitForSingleObject(hMutex, INFINITE);
-		std::cout << 'd' << std::flush;
-		ReleaseMutex(hMutex);
-		ReleaseSemaphore(sem_n, 1, NULL);
-		computation();
-	}
 	return 0;
 }
+
 DWORD WINAPI thread_f(LPVOID iNum) 
 {
 	UNREFERENCED_PARAMETER(iNum);
@@ -144,6 +130,7 @@ DWORD WINAPI thread_f(LPVOID iNum)
 	}
 	return 0;
 }
+
 DWORD WINAPI thread_g(LPVOID iNum) 
 {
 	UNREFERENCED_PARAMETER(iNum);
@@ -158,6 +145,7 @@ DWORD WINAPI thread_g(LPVOID iNum)
 	}
 	return 0;
 }
+
 DWORD WINAPI thread_e(LPVOID iNum) 
 {
 	UNREFERENCED_PARAMETER(iNum);
@@ -198,22 +186,6 @@ DWORD WINAPI thread_k(LPVOID iNum)
 		ReleaseMutex(hMutex);
 		computation();
 	}
-	ReleaseSemaphore(sem_d, 1, NULL);
-	ReleaseSemaphore(sem_m, 1, NULL);
-	WaitForSingleObject(sem_k, INFINITE);
-	WaitForSingleObject(sem_k, INFINITE);
-	WaitForSingleObject(sem_k, INFINITE);
-	WaitForSingleObject(sem_k, INFINITE);
-	ReleaseSemaphore(sem_k, 1, NULL);
-	for (int i = 0; i < 3; i++) 
-	{
-		WaitForSingleObject(sem_k, INFINITE);
-		WaitForSingleObject(hMutex, INFINITE);
-		std::cout << 'k' << std::flush;
-		ReleaseMutex(hMutex);
-		ReleaseSemaphore(sem_m, 1, NULL);
-		computation();
-	}
 	return 0;
 }
 DWORD WINAPI thread_i(LPVOID iNum) 
@@ -237,9 +209,6 @@ DWORD WINAPI thread_i(LPVOID iNum)
 		ReleaseMutex(hMutex);
 		computation();
 	}
-	ReleaseSemaphore(sem_d, 1, NULL);
-	ReleaseSemaphore(sem_m, 1, NULL);
-	ReleaseSemaphore(sem_k, 1, NULL);
 	return 0;
 }
 DWORD WINAPI thread_h(LPVOID iNum) 
@@ -254,9 +223,6 @@ DWORD WINAPI thread_h(LPVOID iNum)
 		ReleaseMutex(hMutex);
 		computation();
 	}
-	ReleaseSemaphore(sem_d, 1, NULL);
-	ReleaseSemaphore(sem_m, 1, NULL);
-	ReleaseSemaphore(sem_k, 1, NULL);
 	return 0;
 }
 DWORD WINAPI thread_m(LPVOID iNum) 
@@ -269,20 +235,6 @@ DWORD WINAPI thread_m(LPVOID iNum)
 		WaitForSingleObject(hMutex, INFINITE);
 		std::cout << 'm' << std::flush;
 		ReleaseMutex(hMutex);
-		computation();
-	}
-	ReleaseSemaphore(sem_d, 1, NULL);
-	ReleaseSemaphore(sem_k, 1, NULL);
-	WaitForSingleObject(sem_m, INFINITE);
-	WaitForSingleObject(sem_m, INFINITE);
-	WaitForSingleObject(sem_m, INFINITE);
-	WaitForSingleObject(sem_m, INFINITE);
-	for (int i = 0; i < 3; i++) {
-		WaitForSingleObject(sem_m, INFINITE);
-		WaitForSingleObject(hMutex, INFINITE);
-		std::cout << 'm' << std::flush;
-		ReleaseMutex(hMutex);
-		ReleaseSemaphore(sem_d, 1, NULL);
 		computation();
 	}
 	return 0;
@@ -301,6 +253,53 @@ DWORD WINAPI thread_n(LPVOID iNum)
 	}
 	return 0;
 }
+
+DWORD WINAPI thread_d2(LPVOID iNum)
+{
+	UNREFERENCED_PARAMETER(iNum);
+	for (int i = 0; i < 3; i++)
+	{
+		WaitForSingleObject(sem_d, INFINITE);
+		WaitForSingleObject(hMutex, INFINITE);
+		std::cout << 'd' << std::flush;
+		ReleaseMutex(hMutex);
+		ReleaseSemaphore(sem_n, 1, NULL);
+		computation();
+	}
+	return 0;
+}
+
+DWORD WINAPI thread_k2(LPVOID iNum)
+{
+	UNREFERENCED_PARAMETER(iNum);
+	ReleaseSemaphore(sem_k, 1, NULL);
+	for (int i = 0; i < 3; i++)
+	{
+		WaitForSingleObject(sem_k, INFINITE);
+		WaitForSingleObject(hMutex, INFINITE);
+		std::cout << 'k' << std::flush;
+		ReleaseMutex(hMutex);
+		ReleaseSemaphore(sem_m, 1, NULL);
+		computation();
+	}
+	return 0;
+}
+
+DWORD WINAPI thread_m2(LPVOID iNum)
+{
+	UNREFERENCED_PARAMETER(iNum);
+	for (int i = 0; i < 3; i++)
+	{
+		WaitForSingleObject(sem_m, INFINITE);
+		WaitForSingleObject(hMutex, INFINITE);
+		std::cout << 'm' << std::flush;
+		ReleaseMutex(hMutex);
+		ReleaseSemaphore(sem_d, 1, NULL);
+		computation();
+	}
+	return 0;
+}
+
 DWORD WINAPI thread_p(LPVOID iNum) 
 {
 	UNREFERENCED_PARAMETER(iNum);
@@ -422,6 +421,7 @@ int lab3_init()
 	WaitForSingleObject(hThreads[5], INFINITE);
 	WaitForSingleObject(hThreads[4], INFINITE);
 	WaitForSingleObject(hThreads[6], INFINITE);
+
 	// interval 4 (d[3], k[7], i[8], h[9], m[10])
 	hThreads[9] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)thread_h, NULL, 0, &IDThread);
 	if (hThreads[9] == NULL)
@@ -429,9 +429,22 @@ int lab3_init()
 	hThreads[10] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)thread_m, NULL, 0, &IDThread);
 	if (hThreads[10] == NULL)
 		return GetLastError();
+	WaitForSingleObject(hThreads[10], INFINITE);
+	WaitForSingleObject(hThreads[3], INFINITE);
+	WaitForSingleObject(hThreads[7], INFINITE);
 	WaitForSingleObject(hThreads[9], INFINITE);
 	WaitForSingleObject(hThreads[8], INFINITE);
+
 	// interval 5
+	hThreads[3] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)thread_d2, NULL, 0, &IDThread);
+	if (hThreads[3] == NULL)
+		return GetLastError();
+	hThreads[7] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)thread_k2, NULL, 0, &IDThread);
+	if (hThreads[7] == NULL)
+		return GetLastError();
+	hThreads[10] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)thread_m2, NULL, 0, &IDThread);
+	if (hThreads[10] == NULL)
+		return GetLastError();
 	hThreads[11] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)thread_n, NULL, 0, &IDThread);
 	if (hThreads[11] == NULL)
 		return GetLastError();
