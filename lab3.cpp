@@ -21,7 +21,6 @@ HANDLE hThreads[THREADCOUNT];
 
 volatile int n;
 
-HANDLE sem_b, sem_c, sem_e, sem_f;
 HANDLE sem_bs, sem_es, sem_ds, sem_gs, sem_fs;
 HANDLE sem_hs, sem_is, sem_ks;
 
@@ -59,19 +58,6 @@ DWORD WINAPI thread_a(LPVOID iNum)
 DWORD WINAPI thread_b(LPVOID iNum)
 {
 	UNREFERENCED_PARAMETER(iNum);
-	// interval 2
-	for (int i = 0; i < num; i++)
-	{
-		WaitForSingleObject(hMutex, INFINITE);
-		std::cout << 'b' << std::flush;
-		ReleaseMutex(hMutex);
-		computation();
-	}
-	ReleaseSemaphore(sem_b, 4, NULL);
-	WaitForSingleObject(sem_c, INFINITE);
-	WaitForSingleObject(sem_e, INFINITE);
-	WaitForSingleObject(sem_f, INFINITE);
-
 	// interval 3
 	for (int i = 0; i < num; i++)
 	{
@@ -85,6 +71,65 @@ DWORD WINAPI thread_b(LPVOID iNum)
 	return 0;
 }
 
+
+DWORD WINAPI thread_b1(LPVOID iNum)
+{
+	UNREFERENCED_PARAMETER(iNum);
+	// interval 2
+
+	for (int i = 0; i < num; i++)
+	{
+		WaitForSingleObject(hMutex, INFINITE);
+		std::cout << 'b' << std::flush;
+		ReleaseMutex(hMutex);
+		computation();
+	}
+	return 0;
+}
+
+DWORD WINAPI thread_f1(LPVOID iNum)
+{
+	UNREFERENCED_PARAMETER(iNum);
+	// interval 2
+	for (int i = 0; i < num; i++)
+	{
+		WaitForSingleObject(hMutex, INFINITE);
+		std::cout << 'f' << std::flush;
+		ReleaseMutex(hMutex);
+		computation();
+	}
+	return 0;
+}
+
+DWORD WINAPI thread_d1(LPVOID iNum)
+{
+	UNREFERENCED_PARAMETER(iNum);
+	// interval 2
+	for (int i = 0; i < num; i++)
+	{
+		WaitForSingleObject(hMutex, INFINITE);
+		std::cout << 'd' << std::flush;
+		ReleaseMutex(hMutex);
+		computation();
+	}
+	return 0;
+
+}
+
+DWORD WINAPI thread_e1(LPVOID iNum)
+{
+	UNREFERENCED_PARAMETER(iNum);
+	// interval 2
+	for (int i = 0; i < num; i++)
+	{
+		WaitForSingleObject(hMutex, INFINITE);
+		std::cout << 'e' << std::flush;
+		ReleaseMutex(hMutex);
+		computation();
+	}
+	return 0;
+
+}
 DWORD WINAPI thread_c(LPVOID iNum)
 {
 	UNREFERENCED_PARAMETER(iNum);
@@ -96,26 +141,12 @@ DWORD WINAPI thread_c(LPVOID iNum)
 		ReleaseMutex(hMutex);
 		computation();
 	}
-	ReleaseSemaphore(sem_c, 5, NULL);
 	return 0;
 }
 
 DWORD WINAPI thread_e(LPVOID iNum)
 {
 	UNREFERENCED_PARAMETER(iNum);
-	// interval 2
-	for (int i = 0; i < num; i++)
-	{
-		WaitForSingleObject(hMutex, INFINITE);
-		std::cout << 'e' << std::flush;
-		ReleaseMutex(hMutex);
-		computation();
-	}
-	ReleaseSemaphore(sem_e, 4, NULL);
-	WaitForSingleObject(sem_b, INFINITE);
-	WaitForSingleObject(sem_c, INFINITE);
-	WaitForSingleObject(sem_f, INFINITE);
-
 	// interval 3
 	for (int i = 0; i < num; i++)
 	{
@@ -155,20 +186,7 @@ DWORD WINAPI thread_e(LPVOID iNum)
 DWORD WINAPI thread_f(LPVOID iNum)
 {
 	UNREFERENCED_PARAMETER(iNum);
-	// interval 2
-	for (int i = 0; i < num; i++)
-	{
-		WaitForSingleObject(hMutex, INFINITE);
-		std::cout << 'f' << std::flush;
-		ReleaseMutex(hMutex);
-		computation();
-	}
-	ReleaseSemaphore(sem_f, 4, NULL);
-	// interval 3
-	WaitForSingleObject(sem_b, INFINITE);
-	WaitForSingleObject(sem_c, INFINITE);
-	WaitForSingleObject(sem_e, INFINITE);
-
+	// 3
 	for (int i = 0; i < num; i++)
 	{
 		WaitForSingleObject(sem_fs, INFINITE);
@@ -199,11 +217,6 @@ DWORD WINAPI thread_d(LPVOID iNum)
 {
 	UNREFERENCED_PARAMETER(iNum);
 	// interval 3
-	WaitForSingleObject(sem_b, INFINITE);
-	WaitForSingleObject(sem_c, INFINITE);
-	WaitForSingleObject(sem_e, INFINITE);
-	WaitForSingleObject(sem_f, INFINITE);
-
 	for (int i = 0; i < num; i++)
 	{
 		WaitForSingleObject(sem_ds, INFINITE);
@@ -219,10 +232,6 @@ DWORD WINAPI thread_d(LPVOID iNum)
 DWORD WINAPI thread_g(LPVOID iNum)
 {
 	UNREFERENCED_PARAMETER(iNum);
-	WaitForSingleObject(sem_b, INFINITE);
-	WaitForSingleObject(sem_c, INFINITE);
-	WaitForSingleObject(sem_e, INFINITE);
-	WaitForSingleObject(sem_f, INFINITE);
 	// interval 3
 	for (int i = 0; i < num; i++)
 	{
@@ -324,27 +333,6 @@ int lab3_init()
 	// creating a mutex
 	CONST HANDLE hMutex = CreateMutex(NULL, FALSE, NULL);
 	// creating semaphores
-	sem_b = CreateSemaphore(NULL, 0, 10, NULL);
-	if (sem_b == NULL){
-		printf("CreateSemaphore error: %d\n", GetLastError());
-		return 1;
-	}
-	sem_c = CreateSemaphore(NULL, 0, 10, NULL);
-	if (sem_c == NULL){
-		printf("CreateSemaphore error: %d\n", GetLastError());
-		return 1;
-	}
-	sem_e = CreateSemaphore(NULL, 0, 10, NULL);
-	if (sem_e == NULL){
-		printf("CreateSemaphore error: %d\n", GetLastError());
-		return 1;
-	}
-	sem_f = CreateSemaphore(NULL, 0, 10, NULL);
-	if (sem_f == NULL){
-		printf("CreateSemaphore error: %d\n", GetLastError());
-		return 1;
-	}
-	// creating semaphores
 	sem_gs = CreateSemaphore(NULL, 0, 10, NULL);
 	if (sem_gs == NULL){
 		printf("CreateSemaphore error: %d\n", GetLastError());
@@ -391,16 +379,26 @@ int lab3_init()
 	hThreads[0] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)thread_a, NULL, 0, &IDThread);
 	if (hThreads[0] == NULL) return GetLastError();
 	WaitForSingleObject(hThreads[0], INFINITE);
-
-	hThreads[1] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)thread_b, NULL, 0, &IDThread);
+	hThreads[1] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)thread_b1, NULL, 0, &IDThread);
 	if (hThreads[1] == NULL) return GetLastError();
 	hThreads[2] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)thread_c, NULL, 0, &IDThread);
 	if (hThreads[2] == NULL) return GetLastError();
+	hThreads[3] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)thread_e1, NULL, 0, &IDThread);
+	if (hThreads[3] == NULL) return GetLastError();
+	hThreads[4] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)thread_f1, NULL, 0, &IDThread);
+	if (hThreads[4] == NULL) return GetLastError();
+
+	WaitForSingleObject(hThreads[1], INFINITE);
+	WaitForSingleObject(hThreads[2], INFINITE);
+	WaitForSingleObject(hThreads[3], INFINITE);
+	WaitForSingleObject(hThreads[4], INFINITE);
+
+	hThreads[1] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)thread_b, NULL, 0, &IDThread);
+	if (hThreads[1] == NULL) return GetLastError();
 	hThreads[3] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)thread_e, NULL, 0, &IDThread);
 	if (hThreads[3] == NULL) return GetLastError();
 	hThreads[4] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)thread_f, NULL, 0, &IDThread);
 	if (hThreads[4] == NULL) return GetLastError();
-
 	hThreads[5] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)thread_d, NULL, 0, &IDThread);
 	if (hThreads[5] == NULL) return GetLastError();
 	hThreads[6] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)thread_g, NULL, 0, &IDThread);
@@ -435,11 +433,6 @@ int lab3_init()
 
 	// closing the mutex and semaphores
 	CloseHandle(hMutex);
-
-	CloseHandle(sem_b);
-	CloseHandle(sem_c);
-	CloseHandle(sem_e);
-	CloseHandle(sem_f);
 
 	CloseHandle(sem_bs);
 	CloseHandle(sem_es);
